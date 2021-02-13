@@ -73,9 +73,9 @@ const App: () => React$Node = () => {
         </ScrollView>
       </SafeAreaView>
       <View style={styles.viewPicker}>
-        <WordPicker phoneNumberSubset="area..." />
-        <WordPicker phoneNumberSubset="prefix..." />
-        <WordPicker phoneNumberSubset="suffix..." />
+        <WordPicker phoneNumberSubset="area..." words={areaCodeWords} />
+        <WordPicker phoneNumberSubset="prefix..." words={prefixWords} />
+        <WordPicker phoneNumberSubset="suffix..." words={suffixWords} />
       </View>
     </>
   );

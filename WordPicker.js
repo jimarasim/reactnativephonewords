@@ -3,21 +3,23 @@ import {useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 
-function WordPicker({phoneNumberSubset}) {
-  const [choosenLabel, setChoosenLabel] = useState('Native');
-  const [choosenIndex, setChoosenIndex] = useState('0');
+function WordPicker({phoneNumberSubset, words}) {
+  const [selectedLabel, setSelectedLabel] = useState(phoneNumberSubset);
   return (
     <Picker
       style={styles.picker}
-      selectedValue={choosenLabel}
-      onValueChange={(itemValue, itemIndex) => {
-        setChoosenLabel(itemValue);
-        setChoosenIndex(itemIndex);
-      }}>
+      selectedValue={selectedLabel}
+      onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
       <Picker.Item label={phoneNumberSubset} value="0" />
-      <Picker.Item label="moon" value="1" />
-      <Picker.Item label="sun" value="2" />
-      <Picker.Item label="star" value="3" />
+      {words.map((valueOfWord, indexOfWord) => {
+        return (
+          <Picker.Item
+            key={indexOfWord}
+            label={valueOfWord}
+            value={indexOfWord}
+          />
+        );
+      })}
     </Picker>
   );
 }
