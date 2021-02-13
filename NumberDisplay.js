@@ -13,10 +13,10 @@ function NumberDisplay({phoneNumberArrayOfKeyLetters}) {
 const styles = StyleSheet.create({
   codedNumber: {
     backgroundColor: Colors.azure,
-    flex: 1,
     fontFamily: 'Arial',
-    fontSize: 15,
+    fontSize: 17,
     color: Colors.white,
+    marginVertical: 10,
   },
 });
 

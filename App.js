@@ -7,6 +7,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {
   SafeAreaView,
   StyleSheet,
@@ -50,16 +51,18 @@ const App: () => React$Node = () => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
+      <SafeAreaView style={styles.safeAreaView}>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
+          style={styles.scrollView}
+          contentContainerStyle={{alignItems: 'center'}}>
           <NumberInput
             id="phonenumber"
             maxLength="10"
             action={(text) => handleNumberInputChange(text, setPhoneNumber)}
           />
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
+
           <Text style={styles.textWhite}>
             {areaCodeWords.map((value) => value + ' ')}
           </Text>
@@ -144,12 +147,19 @@ function getWordCombinations(newCodedPhoneNumberArray) {
 }
 
 const styles = StyleSheet.create({
+  safeAreaView: {
+    flex: 1,
+  },
   scrollView: {
     backgroundColor: Colors.black,
+    marginHorizontal: 20,
   },
   textWhite: {
-    backgroundColor: Colors.black,
-    color: Colors.white,
+    color: 'white',
+    backgroundColor: 'lightslategrey',
+    fontSize: 20,
+    width: '100%',
+    marginVertical: 10,
   },
 });
 

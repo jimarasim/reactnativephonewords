@@ -20,12 +20,14 @@ function NumberInput({id, action, maxLength}) {
 
 const styles = StyleSheet.create({
   inputNumber: {
-    backgroundColor: Colors.white,
+    backgroundColor: 'cyan',
     flex: 1,
+    width: '80%',
     height: 100,
     fontFamily: 'Arial',
     fontSize: 50,
     color: Colors.black,
+    marginVertical: 10,
   },
 });
 
