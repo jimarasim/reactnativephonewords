@@ -7,13 +7,11 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   StatusBar,
-  FlatList,
   View,
   Text,
 } from 'react-native';
@@ -22,6 +20,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 import NumberInput from './NumberInput';
 import NumberDisplay from './NumberDisplay';
+import WordPicker from './WordPicker';
 
 const App: () => React$Node = () => {
   const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(''));
@@ -29,6 +28,7 @@ const App: () => React$Node = () => {
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
   const [showCopyButtons, setShowCopyButtons] = useState(false);
+  const [selectedValue, setSelectedValue] = useState('java');
 
   useEffect(() => {
     let newAreaCodeWords = [];
@@ -58,11 +58,9 @@ const App: () => React$Node = () => {
           contentContainerStyle={{alignItems: 'center'}}>
           <NumberInput
             id="phonenumber"
-            maxLength="10"
             action={(text) => handleNumberInputChange(text, setPhoneNumber)}
           />
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
-
           <Text style={styles.textWhite}>
             {areaCodeWords.map((value) => value + ' ')}
           </Text>
@@ -74,6 +72,11 @@ const App: () => React$Node = () => {
           </Text>
         </ScrollView>
       </SafeAreaView>
+      <View style={styles.viewPicker}>
+        <WordPicker phoneNumberSubset="area..." />
+        <WordPicker phoneNumberSubset="prefix..." />
+        <WordPicker phoneNumberSubset="suffix..." />
+      </View>
     </>
   );
 };
@@ -147,8 +150,15 @@ function getWordCombinations(newCodedPhoneNumberArray) {
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  viewPicker: {
     flex: 1,
+    flexDirection: 'row',
+    width: '33.3%',
+    alignContent: 'center',
+  },
+  safeAreaView: {
+    flex: 2,
+    width: '100%',
   },
   scrollView: {
     backgroundColor: Colors.black,

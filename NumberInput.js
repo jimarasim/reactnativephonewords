@@ -2,14 +2,14 @@ import * as React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-function NumberInput({id, action, maxLength}) {
+function NumberInput({id, action}) {
   return (
     <>
       <TextInput
         type="search"
         id={id}
         onChangeText={action}
-        maxLength={parseInt(maxLength)}
+        maxLength={10}
         placeholder="Enter 10 Digits"
         style={styles.inputNumber}
         keyboardType="numeric"
@@ -20,9 +20,9 @@ function NumberInput({id, action, maxLength}) {
 
 const styles = StyleSheet.create({
   inputNumber: {
-    backgroundColor: 'cyan',
+    backgroundColor: 'lightcyan',
     flex: 1,
-    width: '80%',
+    width: '100%',
     height: 100,
     fontFamily: 'Arial',
     fontSize: 50,
