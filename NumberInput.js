@@ -12,6 +12,7 @@ function NumberInput({id, action, maxLength}) {
         maxLength={parseInt(maxLength)}
         placeholder="Enter 10 Digits"
         style={styles.inputNumber}
+        keyboardType="numeric"
       />
     </>
   );
@@ -19,12 +20,12 @@ function NumberInput({id, action, maxLength}) {
 
 const styles = StyleSheet.create({
   inputNumber: {
-    backgroundColor: Colors.azure,
+    backgroundColor: Colors.white,
     flex: 1,
     height: 100,
     fontFamily: 'Arial',
     fontSize: 50,
-    color: Colors.white,
+    color: Colors.black,
   },
 });
 

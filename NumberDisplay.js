@@ -14,9 +14,8 @@ const styles = StyleSheet.create({
   codedNumber: {
     backgroundColor: Colors.azure,
     flex: 1,
-    height: 100,
     fontFamily: 'Arial',
-    fontSize: 20,
+    fontSize: 15,
     color: Colors.white,
   },
 });
