@@ -5,6 +5,7 @@ import {Picker} from '@react-native-picker/picker';
 
 function WordPicker({phoneNumberSubset, words}) {
   const [selectedLabel, setSelectedLabel] = useState(phoneNumberSubset);
+  console.log(words);
   return (
     <Picker
       style={styles.picker}
