@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,21 +14,22 @@ import {
   StatusBar,
   View,
   Text,
-} from 'react-native';
+  Button,
+} from "react-native";
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
-import NumberInput from './NumberInput';
-import NumberDisplay from './NumberDisplay';
-import WordPicker from './WordPicker';
+import NumberInput from "./NumberInput";
+import NumberDisplay from "./NumberDisplay";
+import WordPicker from "./WordPicker";
 
 const App: () => React$Node = () => {
-  const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(''));
+  const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(""));
   const [areaCodeWords, setAreaCodeWords] = useState([]);
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
   const [showCopyButtons, setShowCopyButtons] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('java');
+  const [selectedValue, setSelectedValue] = useState("java");
 
   useEffect(() => {
     let newAreaCodeWords = [];
@@ -55,20 +56,20 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}
-          contentContainerStyle={{alignItems: 'center'}}>
+          contentContainerStyle={{ alignItems: "center" }}>
           <NumberInput
             id="phonenumber"
             action={(text) => handleNumberInputChange(text, setPhoneNumber)}
           />
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
           <Text style={styles.textWhite}>
-            {areaCodeWords.map((value) => value + ' ')}
+            {areaCodeWords.map((value) => value + " ")}
           </Text>
           <Text style={styles.textWhite}>
-            {prefixWords.map((value) => value + ' ')}
+            {prefixWords.map((value) => value + " ")}
           </Text>
           <Text style={styles.textWhite}>
-            {suffixWords.map((value) => value + ' ')}
+            {suffixWords.map((value) => value + " ")}
           </Text>
         </ScrollView>
       </SafeAreaView>
@@ -77,24 +78,25 @@ const App: () => React$Node = () => {
         <WordPicker phoneNumberSubset="prefix..." words={prefixWords} />
         <WordPicker phoneNumberSubset="suffix..." words={suffixWords} />
       </View>
+      <Button style={styles.copyButton} title="Copy"></Button>
     </>
   );
 };
 
 function handleNumberInputChange(text, setPhoneNumber) {
   const keyLetters = [
-    '0',
-    '1',
-    'abc',
-    'def',
-    'ghi',
-    'jkl',
-    'mno',
-    'pqrs',
-    'tuv',
-    'wxyz',
+    "0",
+    "1",
+    "abc",
+    "def",
+    "ghi",
+    "jkl",
+    "mno",
+    "pqrs",
+    "tuv",
+    "wxyz",
   ];
-  let newCodedPhoneNumberArray = Array(10).fill('');
+  let newCodedPhoneNumberArray = Array(10).fill("");
   for (let i = 0; i < text.length; i++) {
     if (parseInt(text[i]) >= 0 && parseInt(text[i]) <= 9) {
       newCodedPhoneNumberArray[i] = keyLetters[parseInt(text[i])];
@@ -115,8 +117,8 @@ function getWordCombinations(newCodedPhoneNumberArray) {
       for (let k = 0; k < newCodedPhoneNumberArray[2].length; k++) {
         newAreaCodeWords.push([
           newCodedPhoneNumberArray[0][i] +
-            newCodedPhoneNumberArray[1][j] +
-            newCodedPhoneNumberArray[2][k],
+          newCodedPhoneNumberArray[1][j] +
+          newCodedPhoneNumberArray[2][k],
         ]);
       }
     }
@@ -126,8 +128,8 @@ function getWordCombinations(newCodedPhoneNumberArray) {
       for (let k = 0; k < newCodedPhoneNumberArray[5].length; k++) {
         newPrefixWords.push([
           newCodedPhoneNumberArray[3][i] +
-            newCodedPhoneNumberArray[4][j] +
-            newCodedPhoneNumberArray[5][k],
+          newCodedPhoneNumberArray[4][j] +
+          newCodedPhoneNumberArray[5][k],
         ]);
       }
     }
@@ -138,9 +140,9 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         for (let l = 0; l < newCodedPhoneNumberArray[9].length; l++) {
           newSuffixWords.push([
             newCodedPhoneNumberArray[6][i] +
-              newCodedPhoneNumberArray[7][j] +
-              newCodedPhoneNumberArray[8][k] +
-              newCodedPhoneNumberArray[9][l],
+            newCodedPhoneNumberArray[7][j] +
+            newCodedPhoneNumberArray[8][k] +
+            newCodedPhoneNumberArray[9][l],
           ]);
         }
       }
@@ -151,24 +153,27 @@ function getWordCombinations(newCodedPhoneNumberArray) {
 
 const styles = StyleSheet.create({
   viewPicker: {
-    flex: 1,
-    flexDirection: 'row',
-    width: '33.3%',
-    alignContent: 'center',
+    flex: 2,
+    flexDirection: "row",
+    width: "33.3%",
+    alignContent: "center",
   },
   safeAreaView: {
-    flex: 2,
-    width: '100%',
+    flex: 5,
+    width: "100%",
+  },
+  copyButton: {
+
   },
   scrollView: {
     backgroundColor: Colors.black,
     marginHorizontal: 20,
   },
   textWhite: {
-    color: 'white',
-    backgroundColor: 'lightslategrey',
+    color: "white",
+    backgroundColor: "black",
     fontSize: 20,
-    width: '100%',
+    width: "100%",
     marginVertical: 10,
   },
 });

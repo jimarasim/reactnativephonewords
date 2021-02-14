@@ -13,6 +13,7 @@ function NumberInput({id, action}) {
         placeholder="Enter 10 Digits"
         style={styles.inputNumber}
         keyboardType="numeric"
+        clearButtonMode="always"
       />
     </>
   );
