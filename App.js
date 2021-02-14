@@ -67,28 +67,22 @@ const App: () => React$Node = () => {
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
           <Text style={styles.textWhite}>AREA</Text>
           <FlatList
+            style={styles.textWhite}
             data={areaCodeWords}
-            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+            renderItem={({item, index}) => <Text id={(index) => {"AREA" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
           />
           <Text style={styles.textWhite}>PREFIX</Text>
           <FlatList
+            style={styles.textWhite}
             data={prefixWords}
-            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+            renderItem={({item, index}) => <Text id={(index) => {"PREFIX" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
           />
           <Text style={styles.textWhite}>SUFFIX</Text>
           <FlatList
+            style={styles.textWhite}
             data={suffixWords}
-            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+            renderItem={({item, index}) => <Text id={(index) => {"SUFFIX" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
           />
-            {/*<Text style={styles.textWhite}>*/}
-            {/*  {areaCodeWords.map((value) => value + " ")}*/}
-            {/*</Text>*/}
-            {/*<Text style={styles.textWhite}>*/}
-            {/*  {prefixWords.map((value) => value + " ")}*/}
-            {/*</Text>*/}
-            {/*<Text style={styles.textWhite}>*/}
-            {/*  {suffixWords.map((value) => value + " ")}*/}
-            {/*</Text>*/}
         </ScrollView>
       </SafeAreaView>
       <SafeAreaView style={styles.viewPicker}>
@@ -170,6 +164,67 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   }
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
+
+function fetchDefinitionFromMerriam(word) {
+  if (word) {
+    word = word.replace("1", "i").replace("0", "o");
+    //MERRIAM WEBSTER
+    fetch('https://www.dictionaryapi.com/api/v3/references/collegiate/json/' + word + '?key=84b88140-44b3-4a35-bfbb-203d307ad99e')
+      .then(res => res.json())
+      .then(res => {
+        if (!res[0].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION" + JSON.stringify(res));
+        //find the first non-undefined definition
+        const numDefs = Object.keys(res).length;
+        let i;
+        for (let i = 0; i < numDefs; i++) {
+          if (res[i].shortdef[0]) {
+            break;
+          }
+        }
+        return res[i].shortdef[0] + " (MERRIAMWEBSTER)";
+      })
+      .catch((message) => {
+          console.warn(message);
+          fetchDefinitionFromUrban(optionId, word, definitionListId);
+        }
+      );
+  }
+}
+
+function fetchDefinitionFromUrban(word) {
+  word = word.replace("1", "i").replace("0", "o");
+  if(word){
+    //URBAN DICTIONARY
+    fetch("https://mashape-community-urban-dictionary.p.rapidapi.com/define?term=" + word, {
+      "method": "GET",
+      "headers": {
+        "x-rapidapi-key": "1c2eed9801msh9a03da88e676433p16db88jsncfe81277ff23",
+        "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com"
+      }
+    })
+      .then(res => res.json())
+      .then (res => {
+        //find most thumbs up definition
+        const numDefs = Object.keys(res.list).length;
+        let bestThumbsUp = 0;
+        let bestIndex = 0;
+        for(let i=0; i<numDefs; i++){
+          if(res.list[i].thumbs_up > bestThumbsUp) {
+            bestThumbsUp = res.list[i].thumbs_up;
+            bestIndex = i;
+          }
+        }
+        if(res.list[bestIndex] === undefined) throw new Error("NO URBAN DICTIONARY DEFINITION:" + JSON.stringify(res));
+        let bestDefinition = res.list[bestIndex].definition;
+        return bestDefinition + " (URBANDICTIONARY)";
+      })
+      .catch((message) => {
+          console.warn(message);
+        }
+      );
+  }
+}
+
 
 const styles = StyleSheet.create({
   viewPicker: {
