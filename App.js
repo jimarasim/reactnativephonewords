@@ -62,27 +62,27 @@ const App: () => React$Node = () => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeAreaView}>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
-          contentContainerStyle={{ alignItems: "center" }}>
-          <NumberInput
-            id="phonenumber"
-            action={(text) => handleNumberInputChange(text, setPhoneNumber)}
-          />
-          <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
-          <WordAndDefinitionList phoneNumberSubset="AREA" words={areaCodeWords} />
-          <WordAndDefinitionList phoneNumberSubset="PREFIX" words={prefixWords} />
-          <WordAndDefinitionList phoneNumberSubset="SUFFIX" words={suffixWords} />
-        </ScrollView>
+        <NumberInput
+          id="phonenumber"
+          action={(text) => handleNumberInputChange(text, setPhoneNumber)}
+        />
+        <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={styles.scrollView}
+        contentContainerStyle={{ alignItems: "center" }}>
+        <WordAndDefinitionList phoneNumberSubset="AREA" words={areaCodeWords} />
+        <WordAndDefinitionList phoneNumberSubset="PREFIX" words={prefixWords} />
+        <WordAndDefinitionList phoneNumberSubset="SUFFIX" words={suffixWords} />
+      </ScrollView>
       <SafeAreaView style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
         <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} />
         <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} />
       </SafeAreaView>
       <SafeAreaView style={styles.copyButton}>
-        <Button style={styles.copyButton} title="Copy"></Button>
+        <Button id="copyButton" style={styles.copyButton} title="Copy"></Button>
       </SafeAreaView>
     </>
   );
@@ -163,16 +163,18 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
     fetch('https://www.dictionaryapi.com/api/v3/references/collegiate/json/' + word + '?key=84b88140-44b3-4a35-bfbb-203d307ad99e')
       .then(res => res.json())
       .then(res => {
-        if (!res[0].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION" + JSON.stringify(res));
+        if (!res[0].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
         //find the first non-undefined definition
         const numDefs = Object.keys(res).length;
         let i;
+        let found = false;
         for (let i = 0; i < numDefs; i++) {
           if (res[i].shortdef[0]) {
+            found = true;
             break;
           }
         }
-        if (res[i].shortdef[0] === undefined) throw new Error("NO MERRIAM WEBSTER DEFINITION" + JSON.stringify(res));
+        if (!found) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
         const definition = res[i].shortdef[0] + " (MERRIAMWEBSTER)";
         words[index][1] = definition;
         setWords[words];
@@ -208,7 +210,7 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
             bestIndex = i;
           }
         }
-        if(res.list[bestIndex] === undefined) throw new Error("NO URBAN DICTIONARY DEFINITION:" + JSON.stringify(res));
+        if(res.list[bestIndex] === undefined) throw new Error("NO URBAN DICTIONARY DEFINITION FOR " + word + " " + JSON.stringify(res));
         let bestDefinition = res.list[bestIndex].definition;
         const definition = bestDefinition + " (URBANDICTIONARY)";
         words[index][1] = definition;
@@ -224,17 +226,19 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
 
 const styles = StyleSheet.create({
   viewPicker: {
-    flex: 2,
+    flex: 0,
     flexDirection: "row",
     width: "33.3%",
     alignContent: "center",
     marginVertical: 5,
   },
   safeAreaView: {
-    flex: 5,
+    flex: 0,
     width: "100%",
+    alignContent: "center",
   },
   scrollView: {
+    flex: 5,
     backgroundColor: Colors.black,
   },
   wordsView: {

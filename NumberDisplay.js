@@ -5,18 +5,20 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 function NumberDisplay({phoneNumberArrayOfKeyLetters}) {
   return (
     <>
-      <Text style={styles.codedNumber}>[{phoneNumberArrayOfKeyLetters}]</Text>
+      <Text id="numberDisplay" style={styles.codedNumber}>
+        [{phoneNumberArrayOfKeyLetters}]
+      </Text>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   codedNumber: {
-    backgroundColor: Colors.azure,
     fontFamily: 'Arial',
     fontSize: 17,
-    color: Colors.white,
+    color: Colors.black,
     marginVertical: 10,
+    textAlign: "center",
   },
 });
 

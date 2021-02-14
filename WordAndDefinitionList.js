@@ -4,7 +4,7 @@ import {FlatList, StyleSheet, Text} from 'react-native';
 function WordAndDefinitionList({phoneNumberSubset, words}) {
   return (
     <>
-      <Text style={styles.textWhite}>{phoneNumberSubset}</Text>
+      <Text id={phoneNumberSubset} style={styles.textWhite}>{phoneNumberSubset}</Text>
       <FlatList
         style={styles.textWhite}
         data={words}
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: '100%',
     marginVertical: 10,
-    flex: 1,
     paddingLeft: 5,
   },
 });

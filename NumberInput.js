@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
   inputNumber: {
     borderWidth : 5,
     backgroundColor: 'lightcyan',
-    flex: 1,
     width: '100%',
     height: 100,
     fontFamily: 'Arial',
