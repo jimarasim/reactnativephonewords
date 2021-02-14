@@ -12,7 +12,7 @@ function WordPicker({phoneNumberSubset, words}) {
       onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
       <Picker.Item key={words.length} label={phoneNumberSubset} value="0" />
       {words.map((word, index) => {
-        return <Picker.Item key={index} label={word.toString()} value={index} />;
+        return <Picker.Item key={index} label={word[0]} value={index} />;
       })}
     </Picker>
   );

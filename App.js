@@ -24,15 +24,13 @@ import { Colors } from "react-native/Libraries/NewAppScreen";
 import NumberInput from "./NumberInput";
 import NumberDisplay from "./NumberDisplay";
 import WordPicker from "./WordPicker";
+import WordAndDefinitionList from "./WordAndDefinitionList";
 
 const App: () => React$Node = () => {
   const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(""));
   const [areaCodeWords, setAreaCodeWords] = useState([]);
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
-  const [showCopyButtons, setShowCopyButtons] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("java");
-
   useEffect(() => {
     let newAreaCodeWords = [];
     let newPrefixWords = [];
@@ -41,15 +39,23 @@ const App: () => React$Node = () => {
       [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
         phoneNumber,
       );
+      Keyboard.dismiss();
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
       setSuffixWords(newSuffixWords);
-      Keyboard.dismiss();
+      areaCodeWords.map((word, index) => {
+        fetchDefinitionFromMerriam(word[0], index, areaCodeWords, setAreaCodeWords);
+      });
+      prefixWords.map((word, index) => {
+        fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
+      });
+      suffixWords.map((word, index) => {
+        fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
+      });
     } else {
       setAreaCodeWords([]);
       setPrefixWords([]);
       setSuffixWords([]);
-      setShowCopyButtons(false);
     }
   }, [phoneNumber]);
   return (
@@ -65,30 +71,15 @@ const App: () => React$Node = () => {
             action={(text) => handleNumberInputChange(text, setPhoneNumber)}
           />
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
-          <Text style={styles.textWhite}>AREA</Text>
-          <FlatList
-            style={styles.textWhite}
-            data={areaCodeWords}
-            renderItem={({item, index}) => <Text id={(index) => {"AREA" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
-          />
-          <Text style={styles.textWhite}>PREFIX</Text>
-          <FlatList
-            style={styles.textWhite}
-            data={prefixWords}
-            renderItem={({item, index}) => <Text id={(index) => {"PREFIX" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
-          />
-          <Text style={styles.textWhite}>SUFFIX</Text>
-          <FlatList
-            style={styles.textWhite}
-            data={suffixWords}
-            renderItem={({item, index}) => <Text id={(index) => {"SUFFIX" + `${index}`}} key={item} style={styles.textWhite}>{item}</Text>}
-          />
+          <WordAndDefinitionList phoneNumberSubset="AREA" words={areaCodeWords} />
+          <WordAndDefinitionList phoneNumberSubset="PREFIX" words={prefixWords} />
+          <WordAndDefinitionList phoneNumberSubset="SUFFIX" words={suffixWords} />
         </ScrollView>
       </SafeAreaView>
       <SafeAreaView style={styles.viewPicker}>
-        <WordPicker phoneNumberSubset="area..." words={areaCodeWords} />
-        <WordPicker phoneNumberSubset="prefix..." words={prefixWords} />
-        <WordPicker phoneNumberSubset="suffix..." words={suffixWords} />
+        <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
+        <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} />
+        <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} />
       </SafeAreaView>
       <SafeAreaView style={styles.copyButton}>
         <Button style={styles.copyButton} title="Copy"></Button>
@@ -132,7 +123,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newAreaCodeWords.push([
           newCodedPhoneNumberArray[0][i] +
           newCodedPhoneNumberArray[1][j] +
-          newCodedPhoneNumberArray[2][k],
+          newCodedPhoneNumberArray[2][k], 'undefined'
         ]);
       }
     }
@@ -143,7 +134,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newPrefixWords.push([
           newCodedPhoneNumberArray[3][i] +
           newCodedPhoneNumberArray[4][j] +
-          newCodedPhoneNumberArray[5][k],
+          newCodedPhoneNumberArray[5][k], 'undefined'
         ]);
       }
     }
@@ -156,7 +147,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
             newCodedPhoneNumberArray[6][i] +
             newCodedPhoneNumberArray[7][j] +
             newCodedPhoneNumberArray[8][k] +
-            newCodedPhoneNumberArray[9][l],
+            newCodedPhoneNumberArray[9][l], 'undefined'
           ]);
         }
       }
@@ -165,7 +156,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
 
-function fetchDefinitionFromMerriam(word) {
+function fetchDefinitionFromMerriam(word, index, words, setWords) {
   if (word) {
     word = word.replace("1", "i").replace("0", "o");
     //MERRIAM WEBSTER
@@ -181,17 +172,20 @@ function fetchDefinitionFromMerriam(word) {
             break;
           }
         }
-        return res[i].shortdef[0] + " (MERRIAMWEBSTER)";
+        if (res[i].shortdef[0] === undefined) throw new Error("NO MERRIAM WEBSTER DEFINITION" + JSON.stringify(res));
+        const definition = res[i].shortdef[0] + " (MERRIAMWEBSTER)";
+        words[index][1] = definition;
+        setWords[words];
       })
       .catch((message) => {
           console.warn(message);
-          fetchDefinitionFromUrban(optionId, word, definitionListId);
+          fetchDefinitionFromUrban(word, index, words);
         }
       );
   }
 }
 
-function fetchDefinitionFromUrban(word) {
+function fetchDefinitionFromUrban(word, index, words, setWords) {
   word = word.replace("1", "i").replace("0", "o");
   if(word){
     //URBAN DICTIONARY
@@ -216,7 +210,9 @@ function fetchDefinitionFromUrban(word) {
         }
         if(res.list[bestIndex] === undefined) throw new Error("NO URBAN DICTIONARY DEFINITION:" + JSON.stringify(res));
         let bestDefinition = res.list[bestIndex].definition;
-        return bestDefinition + " (URBANDICTIONARY)";
+        const definition = bestDefinition + " (URBANDICTIONARY)";
+        words[index][1] = definition;
+        setWords[words];
       })
       .catch((message) => {
           console.warn(message);
@@ -240,15 +236,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     backgroundColor: Colors.black,
-  },
-  textWhite: {
-    color: "white",
-    backgroundColor: "black",
-    fontSize: 20,
-    width: "100%",
-    marginVertical: 10,
-    flex: 1,
-    paddingLeft: 5,
   },
   wordsView: {
     flexDirection: "column",
