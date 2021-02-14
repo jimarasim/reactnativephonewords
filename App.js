@@ -18,45 +18,44 @@ import {
   View,
   Keyboard,
 } from "react-native";
-
 import { Colors } from "react-native/Libraries/NewAppScreen";
-
 import NumberInput from "./NumberInput";
 import NumberDisplay from "./NumberDisplay";
 import WordPicker from "./WordPicker";
 import WordAndDefinitionList from "./WordAndDefinitionList";
 
 const App: () => React$Node = () => {
+  var ScrollableTabView = require('react-native-scrollable-tab-view');
   const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(""));
   const [areaCodeWords, setAreaCodeWords] = useState([]);
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
   useEffect(() => {
-    let newAreaCodeWords = [];
-    let newPrefixWords = [];
-    let newSuffixWords = [];
-    if (phoneNumber[9]) {
-      [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
-        phoneNumber,
-      );
-      Keyboard.dismiss();
-      setAreaCodeWords(newAreaCodeWords);
-      setPrefixWords(newPrefixWords);
-      setSuffixWords(newSuffixWords);
-      areaCodeWords.map((word, index) => {
-        fetchDefinitionFromMerriam(word[0], index, areaCodeWords, setAreaCodeWords);
-      });
-      prefixWords.map((word, index) => {
-        fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
-      });
-      suffixWords.map((word, index) => {
-        fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
-      });
-    } else {
-      setAreaCodeWords([]);
-      setPrefixWords([]);
-      setSuffixWords([]);
-    }
+      let newAreaCodeWords = [];
+      let newPrefixWords = [];
+      let newSuffixWords = [];
+      if (phoneNumber[9]) {
+        [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
+          phoneNumber,
+        );
+        Keyboard.dismiss();
+        setAreaCodeWords(newAreaCodeWords);
+        setPrefixWords(newPrefixWords);
+        setSuffixWords(newSuffixWords);
+        areaCodeWords.map((word, index) => {
+          fetchDefinitionFromMerriam(word[0], index, areaCodeWords, setAreaCodeWords);
+        });
+        prefixWords.map((word, index) => {
+          fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
+        });
+        suffixWords.map((word, index) => {
+          fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
+        });
+      } else {
+        setAreaCodeWords([]);
+        setPrefixWords([]);
+        setSuffixWords([]);
+      }
   }, [phoneNumber]);
   return (
     <>
@@ -68,14 +67,11 @@ const App: () => React$Node = () => {
         />
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollView}
-        contentContainerStyle={{ alignItems: "center" }}>
-        <WordAndDefinitionList phoneNumberSubset="AREA" words={areaCodeWords} />
-        <WordAndDefinitionList phoneNumberSubset="PREFIX" words={prefixWords} />
-        <WordAndDefinitionList phoneNumberSubset="SUFFIX" words={suffixWords} />
-      </ScrollView>
+      <ScrollableTabView>
+        <WordAndDefinitionList phoneNumberSubset="AREA" words={areaCodeWords} tabLabel="AREA"  />
+        <WordAndDefinitionList phoneNumberSubset="PREFIX" words={prefixWords} tabLabel="PREFIX" />
+        <WordAndDefinitionList phoneNumberSubset="SUFFIX" words={suffixWords} tabLabel="SUFFIX" />
+      </ScrollableTabView>
       <SafeAreaView style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
         <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} />
@@ -123,8 +119,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newAreaCodeWords.push([
           newCodedPhoneNumberArray[0][i] +
           newCodedPhoneNumberArray[1][j] +
-          newCodedPhoneNumberArray[2][k], 'undefined'
-        ]);
+          newCodedPhoneNumberArray[2][k], 'NO DEFINITION']);
       }
     }
   }
@@ -134,8 +129,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newPrefixWords.push([
           newCodedPhoneNumberArray[3][i] +
           newCodedPhoneNumberArray[4][j] +
-          newCodedPhoneNumberArray[5][k], 'undefined'
-        ]);
+          newCodedPhoneNumberArray[5][k], 'NO DEFINITION']);
       }
     }
   }
@@ -147,8 +141,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
             newCodedPhoneNumberArray[6][i] +
             newCodedPhoneNumberArray[7][j] +
             newCodedPhoneNumberArray[8][k] +
-            newCodedPhoneNumberArray[9][l], 'undefined'
-          ]);
+            newCodedPhoneNumberArray[9][l], 'NO DEFINITION']);
         }
       }
     }
@@ -163,12 +156,12 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
     fetch('https://www.dictionaryapi.com/api/v3/references/collegiate/json/' + word + '?key=84b88140-44b3-4a35-bfbb-203d307ad99e')
       .then(res => res.json())
       .then(res => {
-        if (!res[0].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
         //find the first non-undefined definition
         const numDefs = Object.keys(res).length;
         let i;
         let found = false;
         for (let i = 0; i < numDefs; i++) {
+          if (!res[i].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
           if (res[i].shortdef[0]) {
             found = true;
             break;
@@ -177,11 +170,11 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         if (!found) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
         const definition = res[i].shortdef[0] + " (MERRIAMWEBSTER)";
         words[index][1] = definition;
-        setWords[words];
+        setWords(words);
       })
       .catch((message) => {
           console.warn(message);
-          fetchDefinitionFromUrban(word, index, words);
+          fetchDefinitionFromUrban(word, index, words, setWords);
         }
       );
   }
@@ -214,10 +207,10 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         let bestDefinition = res.list[bestIndex].definition;
         const definition = bestDefinition + " (URBANDICTIONARY)";
         words[index][1] = definition;
-        setWords[words];
+        setWords(words);
       })
       .catch((message) => {
-          console.warn(message);
+          console.warn(message)
         }
       );
   }
@@ -232,14 +225,14 @@ const styles = StyleSheet.create({
     alignContent: "center",
     marginVertical: 5,
   },
+  safeAreaViewDefinitionList: {
+    flex: 5,
+    backgroundColor: Colors.black,
+  },
   safeAreaView: {
     flex: 0,
     width: "100%",
     alignContent: "center",
-  },
-  scrollView: {
-    flex: 5,
-    backgroundColor: Colors.black,
   },
   wordsView: {
     flexDirection: "column",

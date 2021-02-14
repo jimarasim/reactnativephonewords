@@ -4,17 +4,15 @@ import {FlatList, StyleSheet, Text} from 'react-native';
 function WordAndDefinitionList({phoneNumberSubset, words}) {
   return (
     <>
-      <Text id={phoneNumberSubset} style={styles.textWhite}>{phoneNumberSubset}</Text>
+      <Text id={phoneNumberSubset} style={styles.textWhite}>
+        {phoneNumberSubset}
+      </Text>
       <FlatList
+        id={phoneNumberSubset}
         style={styles.textWhite}
         data={words}
         renderItem={({item, index}) => (
-          <Text
-            id={(index) => {
-              phoneNumberSubset + `${index}`;
-            }}
-            key={item[0]}
-            style={styles.textWhite}>
+          <Text key={index} style={styles.textWhite}>
             {item[0]}:{item[1]}
           </Text>
         )}
@@ -29,8 +27,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     fontSize: 20,
     width: '100%',
-    marginVertical: 10,
-    paddingLeft: 5,
   },
 });
 
