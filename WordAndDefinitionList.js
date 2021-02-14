@@ -1,14 +1,11 @@
 import * as React from 'react';
 import {FlatList, StyleSheet, Text} from 'react-native';
 
-function WordAndDefinitionList({phoneNumberSubset, words}) {
+function WordAndDefinitionList({words, tabLabel}) {
   return (
     <>
-      <Text id={phoneNumberSubset} style={styles.textWhite}>
-        {phoneNumberSubset}
-      </Text>
       <FlatList
-        id={phoneNumberSubset}
+        id={{tabLabel}}
         style={styles.textWhite}
         data={words}
         renderItem={({item, index}) => (
