@@ -5,21 +5,14 @@ import {Picker} from '@react-native-picker/picker';
 
 function WordPicker({phoneNumberSubset, words}) {
   const [selectedLabel, setSelectedLabel] = useState(phoneNumberSubset);
-  console.log(words);
   return (
     <Picker
       style={styles.picker}
       selectedValue={selectedLabel}
       onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
-      <Picker.Item label={phoneNumberSubset} value="0" />
-      {words.map((valueOfWord, indexOfWord) => {
-        return (
-          <Picker.Item
-            key={indexOfWord}
-            label={valueOfWord}
-            value={indexOfWord}
-          />
-        );
+      <Picker.Item key={words.length} label={phoneNumberSubset} value="0" />
+      {words.map((word, index) => {
+        return <Picker.Item key={index} label={word.toString()} value={index} />;
       })}
     </Picker>
   );
