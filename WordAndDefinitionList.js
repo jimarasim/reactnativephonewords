@@ -6,10 +6,11 @@ function WordAndDefinitionList({words, tabLabel}) {
     <>
       <FlatList
         id={{tabLabel}}
+        key={{tabLabel}}
         style={styles.textWhite}
         data={words}
         renderItem={({item, index}) => (
-          <Text key={index} style={styles.textWhite}>
+          <Text key={index} id={item} style={styles.textWhite}>
             {item[0]}:{item[1]}
           </Text>
         )}
