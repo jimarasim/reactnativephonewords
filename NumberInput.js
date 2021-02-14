@@ -21,6 +21,7 @@ function NumberInput({id, action}) {
 
 const styles = StyleSheet.create({
   inputNumber: {
+    borderWidth : 5,
     backgroundColor: 'lightcyan',
     flex: 1,
     width: '100%',
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Arial',
     fontSize: 50,
     color: Colors.black,
-    marginVertical: 10,
   },
 });
 

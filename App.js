@@ -15,6 +15,7 @@ import {
   View,
   Text,
   Button,
+  Keyboard,
 } from "react-native";
 
 import { Colors } from "react-native/Libraries/NewAppScreen";
@@ -42,6 +43,7 @@ const App: () => React$Node = () => {
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
       setSuffixWords(newSuffixWords);
+      Keyboard.dismiss();
     } else {
       setAreaCodeWords([]);
       setPrefixWords([]);
@@ -73,12 +75,14 @@ const App: () => React$Node = () => {
           </Text>
         </ScrollView>
       </SafeAreaView>
-      <View style={styles.viewPicker}>
+      <SafeAreaView style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="area..." words={areaCodeWords} />
         <WordPicker phoneNumberSubset="prefix..." words={prefixWords} />
         <WordPicker phoneNumberSubset="suffix..." words={suffixWords} />
-      </View>
-      <Button style={styles.copyButton} title="Copy"></Button>
+      </SafeAreaView>
+      <SafeAreaView style={styles.copyButton}>
+        <Button style={styles.copyButton} title="Copy"></Button>
+      </SafeAreaView>
     </>
   );
 };
