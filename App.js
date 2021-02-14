@@ -12,9 +12,10 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
-  View,
+  FlatList,
   Text,
   Button,
+  View,
   Keyboard,
 } from "react-native";
 
@@ -64,15 +65,30 @@ const App: () => React$Node = () => {
             action={(text) => handleNumberInputChange(text, setPhoneNumber)}
           />
           <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
-          <Text style={styles.textWhite}>
-            {areaCodeWords.map((value) => value + " ")}
-          </Text>
-          <Text style={styles.textWhite}>
-            {prefixWords.map((value) => value + " ")}
-          </Text>
-          <Text style={styles.textWhite}>
-            {suffixWords.map((value) => value + " ")}
-          </Text>
+          <Text style={styles.textWhite}>AREA</Text>
+          <FlatList
+            data={areaCodeWords}
+            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+          />
+          <Text style={styles.textWhite}>PREFIX</Text>
+          <FlatList
+            data={prefixWords}
+            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+          />
+          <Text style={styles.textWhite}>SUFFIX</Text>
+          <FlatList
+            data={suffixWords}
+            renderItem={({item}) => <Text style={styles.textWhite}>{item}</Text>}
+          />
+            {/*<Text style={styles.textWhite}>*/}
+            {/*  {areaCodeWords.map((value) => value + " ")}*/}
+            {/*</Text>*/}
+            {/*<Text style={styles.textWhite}>*/}
+            {/*  {prefixWords.map((value) => value + " ")}*/}
+            {/*</Text>*/}
+            {/*<Text style={styles.textWhite}>*/}
+            {/*  {suffixWords.map((value) => value + " ")}*/}
+            {/*</Text>*/}
         </ScrollView>
       </SafeAreaView>
       <SafeAreaView style={styles.viewPicker}>
@@ -161,17 +177,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "33.3%",
     alignContent: "center",
+    marginVertical: 5,
   },
   safeAreaView: {
     flex: 5,
     width: "100%",
   },
-  copyButton: {
-
-  },
   scrollView: {
     backgroundColor: Colors.black,
-    marginHorizontal: 20,
   },
   textWhite: {
     color: "white",
@@ -179,6 +192,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: "100%",
     marginVertical: 10,
+    flex: 1,
+    paddingLeft: 5,
+  },
+  wordsView: {
+    flexDirection: "column",
   },
 });
 
