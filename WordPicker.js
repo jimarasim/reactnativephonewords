@@ -7,6 +7,7 @@ function WordPicker({phoneNumberSubset, words}) {
   const [selectedLabel, setSelectedLabel] = useState(phoneNumberSubset);
   return (
     <Picker
+      key={phoneNumberSubset}
       style={styles.picker}
       selectedValue={selectedLabel}
       onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
