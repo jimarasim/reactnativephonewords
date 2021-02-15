@@ -48,10 +48,7 @@ const App: () => React$Node = () => {
     <>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView style={styles.safeAreaView}>
-        <NumberInput
-          id="phonenumber"
-          action={(text) => handleNumberInputChange(text, setPhoneNumber)}
-        />
+        <NumberInput id="phonenumber" action={(text) => handleNumberInputChange(text, setPhoneNumber)} />
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
       <ScrollableTabView>
