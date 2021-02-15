@@ -170,6 +170,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         if (!found) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
         const definition = res[i].shortdef[0] + " (MERRIAMWEBSTER)";
         words[index][1] = definition;
+        console.log("DEFINITION FOUND: " + words[index]);
         setWords(words);
       })
       .catch((message) => {
@@ -207,6 +208,7 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         let bestDefinition = res.list[bestIndex].definition;
         const definition = bestDefinition + " (URBANDICTIONARY)";
         words[index][1] = definition;
+        console.log("DEFINITION FOUND: " + words[index]);
         setWords(words);
       })
       .catch((message) => {
