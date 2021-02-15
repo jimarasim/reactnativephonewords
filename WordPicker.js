@@ -5,7 +5,7 @@ import {Picker} from '@react-native-picker/picker';
 
 function WordPicker({phoneNumberSubset, words, phone}) {
   const [selectedLabel, setSelectedLabel] = useState(phoneNumberSubset);
-  if(phone[9]) {
+  if (phone[9]) {
     return (
       <Picker
         key={phoneNumberSubset}
@@ -15,7 +15,7 @@ function WordPicker({phoneNumberSubset, words, phone}) {
         {words.map((word, index) => {
           return (
             <Picker.Item
-              key={(phoneNumberSubset, word) => {
+              key={() => {
                 return phoneNumberSubset + word[0];
               }}
               label={word[0]}

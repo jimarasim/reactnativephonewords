@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text} from 'react-native';
 
 function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
   if (phone[9]) {
@@ -15,14 +15,14 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
           renderItem={({item, index}) => (
             <>
               <Text
-                key={(index, tabLabel) => {
+                key={() => {
                   return tabLabel + 'word' + index;
                 }}
                 style={styles.textBlue}>
                 {item[0]}:
               </Text>
               <Text
-                key={(index, tabLabel) => {
+                key={() => {
                   return tabLabel + 'definition' + index;
                 }}
                 style={styles.textWhite}>
@@ -94,8 +94,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
               JSON.stringify(res),
           );
         }
-        const definition = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
-        words[index][1] = definition;
+        words[index][1] = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
         setWords(words);
       })
       .catch((message) => {
@@ -145,8 +144,7 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         let bestDefinition = res.list[bestIndex].definition
           ? res.list[bestIndex].definition
           : 'NO DEFINITION FOR BEST FOUND';
-        const definition = bestDefinition + ' (URBANDICTIONARY)';
-        words[index][1] = definition;
+        words[index][1] = bestDefinition + ' (URBANDICTIONARY)';
         setWords(words);
       })
       .catch((message) => {

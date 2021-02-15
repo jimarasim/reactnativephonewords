@@ -21,7 +21,7 @@ function NumberInput({id, action}) {
 
 const styles = StyleSheet.create({
   inputNumber: {
-    borderWidth : 5,
+    borderWidth: 5,
     backgroundColor: 'lightcyan',
     width: '100%',
     height: 100,
