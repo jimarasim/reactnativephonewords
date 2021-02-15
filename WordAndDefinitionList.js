@@ -6,7 +6,6 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
     words.map((word, index) => {
       fetchDefinitionFromMerriam(word[0], index, words, setWords);
     });
-
     return (
       <>
         <FlatList
