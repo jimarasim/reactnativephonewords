@@ -43,7 +43,7 @@ const App: () => React$Node = () => {
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
       setSuffixWords(newSuffixWords);
-  }, [phoneNumber]);
+  }, []);
   return (
     <>
       <StatusBar barStyle="dark-content" />
