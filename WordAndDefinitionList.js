@@ -28,7 +28,15 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
       </>
     );
   } else {
-    return <View style={styles.textWhite}></View>;
+    return (
+      <>
+        <FlatList
+          id={tabLabel}
+          key={tabLabel}
+          style={styles.textWhite}
+        />
+      </>
+    );
   }
 }
 
