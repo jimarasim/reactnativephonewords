@@ -1,26 +1,30 @@
 import * as React from 'react';
-import {FlatList, StyleSheet, Text} from 'react-native';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 
-function WordAndDefinitionList({words, setWords, tabLabel}) {
-  words.map((word, index) => {
-    fetchDefinitionFromMerriam(word[0], index, words, setWords);
-  });
+function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
+  if (phone[9]) {
+    words.map((word, index) => {
+      fetchDefinitionFromMerriam(word[0], index, words, setWords);
+    });
 
-  return (
-    <>
-      <FlatList
-        id={tabLabel}
-        key={tabLabel}
-        style={styles.textWhite}
-        data={words}
-        renderItem={({item, index}) => (
-          <Text key={index} id={item} style={styles.textWhite}>
-            {item[0]}:{item[1]}
-          </Text>
-        )}
-      />
-    </>
-  );
+    return (
+      <>
+        <FlatList
+          id={tabLabel}
+          key={tabLabel}
+          style={styles.textWhite}
+          data={words}
+          renderItem={({item, index}) => (
+            <Text key={index} id={item} style={styles.textWhite}>
+              {item[0]}:{item[1]}
+            </Text>
+          )}
+        />
+      </>
+    );
+  } else {
+    return <View style={styles.textWhite}></View>;
+  }
 }
 
 const styles = StyleSheet.create({

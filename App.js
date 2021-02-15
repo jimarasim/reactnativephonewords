@@ -55,9 +55,9 @@ const App: () => React$Node = () => {
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
       <ScrollableTabView>
-        <WordAndDefinitionList words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA"  />
-        <WordAndDefinitionList words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" />
-        <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" />
+        <WordAndDefinitionList words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA" phone={phoneNumber} />
+        <WordAndDefinitionList words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" phone={phoneNumber} />
+        <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
       </ScrollableTabView>
       <SafeAreaView style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
