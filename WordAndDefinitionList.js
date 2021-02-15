@@ -9,7 +9,6 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
     return (
       <>
         <FlatList
-          id={tabLabel}
           key={tabLabel}
           style={styles.textWhite}
           data={words}
@@ -37,7 +36,7 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
   } else {
     return (
       <>
-        <FlatList id={tabLabel} key={tabLabel} style={styles.textWhite} />
+        <FlatList key={tabLabel} style={styles.textWhite} />
       </>
     );
   }

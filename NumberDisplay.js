@@ -5,7 +5,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 function NumberDisplay({phoneNumberArrayOfKeyLetters}) {
   return (
     <>
-      <Text id="numberDisplay" style={styles.codedNumber}>
+      <Text key="numberDisplay" style={styles.codedNumber}>
         [{phoneNumberArrayOfKeyLetters}]
       </Text>
     </>

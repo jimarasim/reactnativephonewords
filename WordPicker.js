@@ -12,9 +12,16 @@ function WordPicker({phoneNumberSubset, words, phone}) {
         style={styles.picker}
         selectedValue={selectedLabel}
         onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
-        <Picker.Item key={words.length} label={phoneNumberSubset} value="0" />
         {words.map((word, index) => {
-          return <Picker.Item key={index} label={word[0]} value={index} />;
+          return (
+            <Picker.Item
+              key={(phoneNumberSubset, word) => {
+                return phoneNumberSubset + word[0];
+              }}
+              label={word[0]}
+              value={index}
+            />
+          );
         })}
       </Picker>
     );
@@ -25,7 +32,11 @@ function WordPicker({phoneNumberSubset, words, phone}) {
         style={styles.picker}
         selectedValue={selectedLabel}
         onValueChange={(itemValue) => setSelectedLabel(itemValue)}>
-        <Picker.Item key={words.length} label={phoneNumberSubset} value="0" />
+        <Picker.Item
+          key={phoneNumberSubset}
+          label={phoneNumberSubset}
+          value="0"
+        />
       </Picker>
     );
   }

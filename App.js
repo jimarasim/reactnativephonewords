@@ -46,23 +46,23 @@ const App: () => React$Node = () => {
   }, [phoneNumber]);
   return (
     <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={styles.safeAreaView}>
+      <StatusBar key="statusbar" barStyle="dark-content" />
+      <SafeAreaView key="numberView" style={styles.safeAreaView}>
         <NumberInput id="phonenumber" action={(text) => handleNumberInputChange(text, setPhoneNumber)} />
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
-      <ScrollableTabView>
+      <ScrollableTabView key="wordlistView">
         <WordAndDefinitionList words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA" phone={phoneNumber} />
         <WordAndDefinitionList words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" phone={phoneNumber} />
         <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
       </ScrollableTabView>
-      <SafeAreaView style={styles.viewPicker}>
+      <SafeAreaView key="pickerView" style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} phone={phoneNumber} />
         <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} phone={phoneNumber} />
         <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} phone={phoneNumber} />
       </SafeAreaView>
-      <SafeAreaView style={styles.copyButton}>
-        <Button id="copyButton" style={styles.copyButton} title="Copy"></Button>
+      <SafeAreaView key="copyButtonView" style={styles.copyButton}>
+        <Button key="copyButton" style={styles.copyButton} title="Copy"></Button>
       </SafeAreaView>
     </>
   );
