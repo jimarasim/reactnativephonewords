@@ -72,7 +72,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         const numDefs = Object.keys(res).length;
         let i;
         let found = false;
-        for (let i = 0; i < numDefs; i++) {
+        for (i = 0; i < numDefs; i++) {
           if (!res[i].hasOwnProperty('shortdef')) {
             throw new Error(
               'NO MERRIAM WEBSTER DEFINITION FOR ' +
@@ -142,7 +142,9 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
               JSON.stringify(res),
           );
         }
-        let bestDefinition = res.list[bestIndex].definition;
+        let bestDefinition = res.list[bestIndex].definition
+          ? res.list[bestIndex].definition
+          : 'NO DEFINITION FOR BEST FOUND';
         const definition = bestDefinition + ' (URBANDICTIONARY)';
         words[index][1] = definition;
         setWords(words);
