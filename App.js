@@ -60,9 +60,9 @@ const App: () => React$Node = () => {
         <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
       </ScrollableTabView>
       <SafeAreaView style={styles.viewPicker}>
-        <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
-        <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} />
-        <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} />
+        <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} phone={phoneNumber} />
+        <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} phone={phoneNumber} />
+        <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} phone={phoneNumber} />
       </SafeAreaView>
       <SafeAreaView style={styles.copyButton}>
         <Button id="copyButton" style={styles.copyButton} title="Copy"></Button>
