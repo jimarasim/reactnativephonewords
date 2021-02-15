@@ -15,10 +15,17 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
           data={words}
           renderItem={({item, index}) => (
             <>
-              <Text key={index} id={item} style={styles.textBlue}>
+              <Text
+                key={(index, tabLabel) => {
+                  return tabLabel + 'word' + index;
+              }} style={styles.textBlue}>
                 {item[0]}:
               </Text>
-              <Text key={index} id={item} style={styles.textWhite}>
+              <Text
+                key={(index, tabLabel) => {
+                  return tabLabel + 'definition' + index;
+                }}
+                style={styles.textWhite}>
                 {item[1]}
               </Text>
             </>
@@ -92,7 +99,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         setWords(words);
       })
       .catch((message) => {
-        console.warn(message);
+        console.log(message);
         fetchDefinitionFromUrban(word, index, words, setWords);
       });
   }
@@ -141,7 +148,7 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         setWords(words);
       })
       .catch((message) => {
-        console.warn(message);
+        console.log(message);
       });
   }
 }

@@ -31,18 +31,18 @@ const App: () => React$Node = () => {
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
   useEffect(() => {
-      let newAreaCodeWords = [];
-      let newPrefixWords = [];
-      let newSuffixWords = [];
       if (phoneNumber[9]) {
+        let newAreaCodeWords = [];
+        let newPrefixWords = [];
+        let newSuffixWords = [];
         [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
           phoneNumber,
         );
+        setAreaCodeWords(newAreaCodeWords);
+        setPrefixWords(newPrefixWords);
+        setSuffixWords(newSuffixWords);
         Keyboard.dismiss();
       }
-      setAreaCodeWords(newAreaCodeWords);
-      setPrefixWords(newPrefixWords);
-      setSuffixWords(newSuffixWords);
   }, [phoneNumber]);
   return (
     <>
