@@ -15,9 +15,14 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
           style={styles.textWhite}
           data={words}
           renderItem={({item, index}) => (
-            <Text key={index} id={item} style={styles.textWhite}>
-              {item[0]}:{item[1]}
-            </Text>
+            <>
+              <Text key={index} id={item} style={styles.textBlue}>
+                {item[0]}:
+              </Text>
+              <Text key={index} id={item} style={styles.textWhite}>
+                {item[1]}
+              </Text>
+            </>
           )}
         />
       </>
@@ -30,6 +35,12 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
 const styles = StyleSheet.create({
   textWhite: {
     color: 'white',
+    backgroundColor: 'black',
+    fontSize: 20,
+    width: '100%',
+  },
+  textBlue: {
+    color: 'lightblue',
     backgroundColor: 'black',
     fontSize: 20,
     width: '100%',
