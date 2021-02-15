@@ -18,6 +18,7 @@ import {
   View,
   Keyboard,
 } from "react-native";
+import ScrollableTabView from "react-native-scrollable-tab-view";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import NumberInput from "./NumberInput";
 import NumberDisplay from "./NumberDisplay";
@@ -25,7 +26,6 @@ import WordPicker from "./WordPicker";
 import WordAndDefinitionList from "./WordAndDefinitionList";
 
 const App: () => React$Node = () => {
-  var ScrollableTabView = require('react-native-scrollable-tab-view');
   const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(""));
   const [areaCodeWords, setAreaCodeWords] = useState([]);
   const [prefixWords, setPrefixWords] = useState([]);
@@ -39,23 +39,10 @@ const App: () => React$Node = () => {
           phoneNumber,
         );
         Keyboard.dismiss();
-        setAreaCodeWords(newAreaCodeWords);
-        setPrefixWords(newPrefixWords);
-        setSuffixWords(newSuffixWords);
-        areaCodeWords.map((word, index) => {
-          fetchDefinitionFromMerriam(word[0], index, areaCodeWords, setAreaCodeWords);
-        });
-        prefixWords.map((word, index) => {
-          fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
-        });
-        suffixWords.map((word, index) => {
-          fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
-        });
-      } else {
-        setAreaCodeWords([]);
-        setPrefixWords([]);
-        setSuffixWords([]);
       }
+      setAreaCodeWords(newAreaCodeWords);
+      setPrefixWords(newPrefixWords);
+      setSuffixWords(newSuffixWords);
   }, [phoneNumber]);
   return (
     <>
@@ -68,9 +55,9 @@ const App: () => React$Node = () => {
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
       <ScrollableTabView>
-        <WordAndDefinitionList words={areaCodeWords} tabLabel="AREA"  />
-        <WordAndDefinitionList words={prefixWords} tabLabel="PREFIX" />
-        <WordAndDefinitionList words={suffixWords} tabLabel="SUFFIX" />
+        <WordAndDefinitionList words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA"  />
+        <WordAndDefinitionList words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" />
+        <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" />
       </ScrollableTabView>
       <SafeAreaView style={styles.viewPicker}>
         <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} />
@@ -148,76 +135,6 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   }
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
-
-function fetchDefinitionFromMerriam(word, index, words, setWords) {
-  if (word) {
-    word = word.replace("1", "i").replace("0", "o");
-    //MERRIAM WEBSTER
-    fetch('https://www.dictionaryapi.com/api/v3/references/collegiate/json/' + word + '?key=84b88140-44b3-4a35-bfbb-203d307ad99e')
-      .then(res => res.json())
-      .then(res => {
-        //find the first non-undefined definition
-        const numDefs = Object.keys(res).length;
-        let i;
-        let found = false;
-        for (let i = 0; i < numDefs; i++) {
-          if (!res[i].hasOwnProperty('shortdef')) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
-          if (res[i].shortdef[0]) {
-            found = true;
-            break;
-          }
-        }
-        if (!found) throw new Error("NO MERRIAM WEBSTER DEFINITION FOR " + word + " " + JSON.stringify(res));
-        const definition = res[i].shortdef[0] + " (MERRIAMWEBSTER)";
-        words[index][1] = definition;
-        console.log("DEFINITION FOUND: " + words[index]);
-        setWords(words);
-      })
-      .catch((message) => {
-          console.warn(message);
-          fetchDefinitionFromUrban(word, index, words, setWords);
-        }
-      );
-  }
-}
-
-function fetchDefinitionFromUrban(word, index, words, setWords) {
-  word = word.replace("1", "i").replace("0", "o");
-  if(word){
-    //URBAN DICTIONARY
-    fetch("https://mashape-community-urban-dictionary.p.rapidapi.com/define?term=" + word, {
-      "method": "GET",
-      "headers": {
-        "x-rapidapi-key": "1c2eed9801msh9a03da88e676433p16db88jsncfe81277ff23",
-        "x-rapidapi-host": "mashape-community-urban-dictionary.p.rapidapi.com"
-      }
-    })
-      .then(res => res.json())
-      .then (res => {
-        //find most thumbs up definition
-        const numDefs = Object.keys(res.list).length;
-        let bestThumbsUp = 0;
-        let bestIndex = 0;
-        for(let i=0; i<numDefs; i++){
-          if(res.list[i].thumbs_up > bestThumbsUp) {
-            bestThumbsUp = res.list[i].thumbs_up;
-            bestIndex = i;
-          }
-        }
-        if(res.list[bestIndex] === undefined) throw new Error("NO URBAN DICTIONARY DEFINITION FOR " + word + " " + JSON.stringify(res));
-        let bestDefinition = res.list[bestIndex].definition;
-        const definition = bestDefinition + " (URBANDICTIONARY)";
-        words[index][1] = definition;
-        console.log("DEFINITION FOUND: " + words[index]);
-        setWords(words);
-      })
-      .catch((message) => {
-          console.warn(message)
-        }
-      );
-  }
-}
-
 
 const styles = StyleSheet.create({
   viewPicker: {
