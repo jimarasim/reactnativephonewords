@@ -18,7 +18,8 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
               <Text
                 key={(index, tabLabel) => {
                   return tabLabel + 'word' + index;
-              }} style={styles.textBlue}>
+                }}
+                style={styles.textBlue}>
                 {item[0]}:
               </Text>
               <Text
