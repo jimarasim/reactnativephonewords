@@ -124,7 +124,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newAreaCodeWords.push([
           newCodedPhoneNumberArray[0][i] +
           newCodedPhoneNumberArray[1][j] +
-          newCodedPhoneNumberArray[2][k], 'DEFINITION PLACEHOLDER']);
+          newCodedPhoneNumberArray[2][k], '']);
       }
     }
   }
@@ -134,7 +134,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newPrefixWords.push([
           newCodedPhoneNumberArray[3][i] +
           newCodedPhoneNumberArray[4][j] +
-          newCodedPhoneNumberArray[5][k], 'DEFINITION PLACEHOLDER']);
+          newCodedPhoneNumberArray[5][k], '']);
       }
     }
   }
@@ -146,7 +146,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
             newCodedPhoneNumberArray[6][i] +
             newCodedPhoneNumberArray[7][j] +
             newCodedPhoneNumberArray[8][k] +
-            newCodedPhoneNumberArray[9][l], 'DEFINITION PLACEHOLDER']);
+            newCodedPhoneNumberArray[9][l], '']);
         }
       }
     }
@@ -195,7 +195,8 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         newWords[index][1] = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
         setWords(newWords);
       })
-      .catch((message) => {
+      .catch((error) => {
+        console.warn(error.getMessage());
         fetchDefinitionFromUrban(word, index, words, setWords);
       });
   }
@@ -245,9 +246,8 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         newWords[index][1] = bestDefinition + ' (URBANDICTIONARY)';
         setWords(newWords);
       })
-      .catch((message) => {
-        newWords[index][1] = 'NO DEFINITION FOUND';
-        setWords(newWords);
+      .catch((error) => {
+        console.warn(error.getMessage());
       });
   }
 }

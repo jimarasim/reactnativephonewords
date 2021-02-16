@@ -27,11 +27,15 @@ function WordAndDefinitionList({
                   {item[0]}:
                 </Text>
               </TouchableOpacity>
-              <Text
-                key={tabLabel + 'definition' + index}
-                style={styles.textWhite}>
-                {item[1]}
-              </Text>
+              {() => {
+                if (item[1]) {
+                  <Text
+                    key={tabLabel + 'definition' + index}
+                    style={styles.textWhite}>
+                    {item[1]}
+                  </Text>;
+                }
+              }}
             </>
           )}
         />
