@@ -1,11 +1,22 @@
-import * as React from 'react';
-import {FlatList, StyleSheet, Text} from 'react-native';
-
-function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
+import {
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import React from 'react';
+function WordAndDefinitionList({
+  words,
+  setWords,
+  tabLabel,
+  phone,
+}) {
   if (phone[9]) {
     words.map((word, index) => {
       fetchDefinitionFromMerriam(word[0], index, words, setWords);
     });
+    Keyboard.dismiss();
     return (
       <>
         <FlatList
@@ -14,17 +25,13 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
           data={words}
           renderItem={({item, index}) => (
             <>
+              <TouchableOpacity>
+                <Text key={tabLabel + 'word' + index} style={styles.textBlue}>
+                  {item[0]}:
+                </Text>
+              </TouchableOpacity>
               <Text
-                key={() => {
-                  return tabLabel + 'word' + index;
-                }}
-                style={styles.textBlue}>
-                {item[0]}:
-              </Text>
-              <Text
-                key={() => {
-                  return tabLabel + 'definition' + index;
-                }}
+                key={tabLabel + 'definition' + index}
                 style={styles.textWhite}>
                 {item[1]}
               </Text>
@@ -98,7 +105,6 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         setWords(words);
       })
       .catch((message) => {
-        console.log(message);
         fetchDefinitionFromUrban(word, index, words, setWords);
       });
   }
@@ -148,7 +154,8 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
         setWords(words);
       })
       .catch((message) => {
-        console.log(message);
+        words[index][1] = 'NO DEFINITION FOUND';
+        setWords(words);
       });
   }
 }

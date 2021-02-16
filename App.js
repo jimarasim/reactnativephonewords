@@ -10,12 +10,9 @@ import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
-  ScrollView,
   StatusBar,
   FlatList,
-  Text,
   Button,
-  View,
   Keyboard,
 } from "react-native";
 import ScrollableTabView from "react-native-scrollable-tab-view";
@@ -52,14 +49,14 @@ const App: () => React$Node = () => {
         <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
       <ScrollableTabView key="wordlistView">
-        <WordAndDefinitionList words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA" phone={phoneNumber} />
-        <WordAndDefinitionList words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" phone={phoneNumber} />
-        <WordAndDefinitionList words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
+        <WordAndDefinitionList key="areadefinitions" words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA" phone={phoneNumber} />
+        <WordAndDefinitionList key="prefixdefinitions" words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" phone={phoneNumber} />
+        <WordAndDefinitionList key="suffixdefinitions" words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
       </ScrollableTabView>
       <SafeAreaView key="pickerView" style={styles.viewPicker}>
-        <WordPicker phoneNumberSubset="AREA" words={areaCodeWords} phone={phoneNumber} />
-        <WordPicker phoneNumberSubset="PREFIX" words={prefixWords} phone={phoneNumber} />
-        <WordPicker phoneNumberSubset="SUFFIX" words={suffixWords} phone={phoneNumber} />
+        <WordPicker key="areaPicker" phoneNumberSubset="AREA" words={areaCodeWords} phone={phoneNumber} />
+        <WordPicker key="prefixPicker" phoneNumberSubset="PREFIX" words={prefixWords} phone={phoneNumber} />
+        <WordPicker key="suffixPicker" phoneNumberSubset="SUFFIX" words={suffixWords} phone={phoneNumber} />
       </SafeAreaView>
       <SafeAreaView key="copyButtonView" style={styles.copyButton}>
         <Button key="copyButton" style={styles.copyButton} title="Copy"></Button>
@@ -103,7 +100,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newAreaCodeWords.push([
           newCodedPhoneNumberArray[0][i] +
           newCodedPhoneNumberArray[1][j] +
-          newCodedPhoneNumberArray[2][k], 'NO DEFINITION']);
+          newCodedPhoneNumberArray[2][k], 'DEFINITION PLACEHOLDER']);
       }
     }
   }
@@ -113,7 +110,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
         newPrefixWords.push([
           newCodedPhoneNumberArray[3][i] +
           newCodedPhoneNumberArray[4][j] +
-          newCodedPhoneNumberArray[5][k], 'NO DEFINITION']);
+          newCodedPhoneNumberArray[5][k], 'DEFINITION PLACEHOLDER']);
       }
     }
   }
@@ -125,7 +122,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
             newCodedPhoneNumberArray[6][i] +
             newCodedPhoneNumberArray[7][j] +
             newCodedPhoneNumberArray[8][k] +
-            newCodedPhoneNumberArray[9][l], 'NO DEFINITION']);
+            newCodedPhoneNumberArray[9][l], 'DEFINITION PLACEHOLDER']);
         }
       }
     }
