@@ -6,12 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
-function WordAndDefinitionList({
-  words,
-  setWords,
-  tabLabel,
-  phone,
-}) {
+function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
   if (phone[9]) {
     words.map((word, index) => {
       fetchDefinitionFromMerriam(word[0], index, words, setWords);
