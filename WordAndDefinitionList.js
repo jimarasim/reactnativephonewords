@@ -5,8 +5,9 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
+  const [valueTapped, setValueTapped] = useState('');
   if (phone[9]) {
     words.map((word, index) => {
       fetchDefinitionFromMerriam(word[0], index, words, setWords);
@@ -20,7 +21,7 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
           data={words}
           renderItem={({item, index}) => (
             <>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => setValueTapped(item[0])}>
                 <Text key={tabLabel + 'word' + index} style={styles.textBlue}>
                   {item[0]}:
                 </Text>
@@ -33,6 +34,7 @@ function WordAndDefinitionList({words, setWords, tabLabel, phone}) {
             </>
           )}
         />
+        <Text>{valueTapped}</Text>
       </>
     );
   } else {

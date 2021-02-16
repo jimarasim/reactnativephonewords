@@ -18,8 +18,6 @@ import {
 import ScrollableTabView from "react-native-scrollable-tab-view";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import NumberInput from "./NumberInput";
-import NumberDisplay from "./NumberDisplay";
-import WordPicker from "./WordPicker";
 import WordAndDefinitionList from "./WordAndDefinitionList";
 
 const App: () => React$Node = () => {
@@ -46,18 +44,12 @@ const App: () => React$Node = () => {
       <StatusBar key="statusbar" barStyle="dark-content" />
       <SafeAreaView key="numberView" style={styles.safeAreaView}>
         <NumberInput id="phonenumber" action={(text) => handleNumberInputChange(text, setPhoneNumber)} />
-        <NumberDisplay phoneNumberArrayOfKeyLetters={phoneNumber} />
       </SafeAreaView>
       <ScrollableTabView key="wordlistView">
         <WordAndDefinitionList key="areadefinitions" words={areaCodeWords} setWords={setAreaCodeWords} tabLabel="AREA" phone={phoneNumber} />
         <WordAndDefinitionList key="prefixdefinitions" words={prefixWords} setWords={setPrefixWords} tabLabel="PREFIX" phone={phoneNumber} />
         <WordAndDefinitionList key="suffixdefinitions" words={suffixWords} setWords={setSuffixWords} tabLabel="SUFFIX" phone={phoneNumber} />
       </ScrollableTabView>
-      <SafeAreaView key="pickerView" style={styles.viewPicker}>
-        <WordPicker key="areaPicker" phoneNumberSubset="AREA" words={areaCodeWords} phone={phoneNumber} />
-        <WordPicker key="prefixPicker" phoneNumberSubset="PREFIX" words={prefixWords} phone={phoneNumber} />
-        <WordPicker key="suffixPicker" phoneNumberSubset="SUFFIX" words={suffixWords} phone={phoneNumber} />
-      </SafeAreaView>
       <SafeAreaView key="copyButtonView" style={styles.copyButton}>
         <Button key="copyButton" style={styles.copyButton} title="Copy"></Button>
       </SafeAreaView>
