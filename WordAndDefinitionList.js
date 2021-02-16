@@ -6,12 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
-function WordAndDefinitionList({
-  words,
-  tabLabel,
-  phone,
-  setValueTapped,
-}) {
+function WordAndDefinitionList({words, tabLabel, phone, setValueTapped}) {
   if (phone[9]) {
     Keyboard.dismiss();
     return (
@@ -27,15 +22,11 @@ function WordAndDefinitionList({
                   {item[0]}:
                 </Text>
               </TouchableOpacity>
-              {() => {
-                if (item[1]) {
-                  <Text
-                    key={tabLabel + 'definition' + index}
-                    style={styles.textWhite}>
-                    {item[1]}
-                  </Text>;
-                }
-              }}
+              <Text
+                key={tabLabel + 'definition' + index}
+                style={styles.textWhite}>
+                {item[1]}
+              </Text>
             </>
           )}
         />
