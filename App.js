@@ -22,7 +22,7 @@ import NumberInput from './NumberInput';
 import WordAndDefinitionList from './WordAndDefinitionList';
 
 const App: () => React$Node = () => {
-  const [phoneNumber, setPhoneNumber] = useState(Array(10).fill(''));
+  const [phoneNumberArray, setPhoneNumberArray] = useState(Array(10).fill(''));
   const [areaCodeWords, setAreaCodeWords] = useState([]);
   const [prefixWords, setPrefixWords] = useState([]);
   const [suffixWords, setSuffixWords] = useState([]);
@@ -30,12 +30,12 @@ const App: () => React$Node = () => {
   const [prefixValueTapped, setPrefixValueTapped] = useState('');
   const [suffixValueTapped, setSuffixValueTapped] = useState('');
   useEffect(() => {
-    if (phoneNumber[9]) {
+    if (phoneNumberArray[9].length >= 1) {
       let newAreaCodeWords = [];
       let newPrefixWords = [];
       let newSuffixWords = [];
       [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
-        phoneNumber,
+        phoneNumberArray,
       );
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
@@ -54,8 +54,15 @@ const App: () => React$Node = () => {
       suffixWords.map((word, index) => {
         fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
       });
+    } else {
+      setAreaCodeWords([]);
+      setPrefixWords([]);
+      setSuffixWords([]);
+      setAreaValueTapped('');
+      setPrefixValueTapped('');
+      setSuffixValueTapped('');
     }
-  }, [phoneNumber]);
+  }, [phoneNumberArray]);
   return (
     <>
       <StatusBar key="statusbar" id="statusbar" barStyle="dark-content" />
@@ -69,13 +76,7 @@ const App: () => React$Node = () => {
           action={(text) =>
             handleNumberInputChange(
               text,
-              setPhoneNumber,
-              setAreaValueTapped,
-              setPrefixValueTapped,
-              setSuffixValueTapped,
-              setAreaCodeWords,
-              setPrefixWords,
-              setSuffixWords,
+              setPhoneNumberArray,
             )
           }
         />
@@ -87,7 +88,7 @@ const App: () => React$Node = () => {
           words={areaCodeWords}
           tabLabel="AREA"
           setValueTapped={setAreaValueTapped}
-          phone={phoneNumber}
+          phone={phoneNumberArray}
         />
         <WordAndDefinitionList
           key="prefixDefinitions"
@@ -95,7 +96,7 @@ const App: () => React$Node = () => {
           words={prefixWords}
           tabLabel="PREFIX"
           setValueTapped={setPrefixValueTapped}
-          phone={phoneNumber}
+          phone={phoneNumberArray}
         />
         <WordAndDefinitionList
           key="suffixDefinitions"
@@ -103,7 +104,7 @@ const App: () => React$Node = () => {
           words={suffixWords}
           tabLabel="SUFFIX"
           setValueTapped={setSuffixValueTapped}
-          phone={phoneNumber}
+          phone={phoneNumberArray}
         />
       </ScrollableTabView>
       <SafeAreaView
@@ -126,14 +127,8 @@ const App: () => React$Node = () => {
 
 function handleNumberInputChange(
   text,
-  setPhoneNumber,
-  setAreaValueTapped,
-  setPrefixValueTapped,
-  setSuffixValueTapped,
-  setAreaCodeWords,
-  setPrefixWords,
-  setSuffixWords,
-) {
+  setPhoneNumberArray,
+  ) {
   if (text.length === 10) {
     const keyLetters = [
       '0',
@@ -155,15 +150,7 @@ function handleNumberInputChange(
         newCodedPhoneNumberArray[i] = text[i];
       }
     }
-    setPhoneNumber(newCodedPhoneNumberArray);
-  } else {
-    setPhoneNumber(Array(10).fill(''));
-    setAreaCodeWords([]);
-    setPrefixWords([]);
-    setSuffixWords([]);
-    setAreaValueTapped('');
-    setPrefixValueTapped('');
-    setSuffixValueTapped('');
+    setPhoneNumberArray(newCodedPhoneNumberArray);
   }
 }
 
@@ -346,3 +333,4 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+
