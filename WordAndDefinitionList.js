@@ -5,38 +5,45 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
 function WordAndDefinitionList({words, tabLabel, phone, setValueTapped}) {
   if (phone[9]) {
     Keyboard.dismiss();
     return (
-      <>
-        <FlatList
-          key={tabLabel}
-          style={styles.textWhite}
-          data={words}
-          renderItem={({item, index}) => (
-            <>
-              <TouchableOpacity onPress={() => setValueTapped(item[0])}>
-                <Text key={tabLabel + 'word' + index} style={styles.textBlue}>
-                  {item[0]}:
-                </Text>
-              </TouchableOpacity>
+      <FlatList
+        keyExtractor={() => {
+          return tabLabel + 'flatlist';
+        }}
+        id={() => {
+          return tabLabel + 'flatlist';
+        }}
+        style={styles.textWhite}
+        data={words}
+        renderItem={({item, index}) => (
+          <>
+            <TouchableOpacity onPress={() => setValueTapped(item[0])}>
               <Text
-                key={tabLabel + 'definition' + index}
-                style={styles.textWhite}>
-                {item[1]}
+                keyExtractor={() => {
+                  return tabLabel + 'word' + index;
+                }}
+                style={styles.textBlue}>
+                {() => item[0]}:
               </Text>
-            </>
-          )}
-        />
-      </>
+            </TouchableOpacity>
+            <Text
+              keyExtractor={() => {
+                return tabLabel + 'definition' + index;
+              }}
+              style={styles.textWhite}>
+              {item[1]}
+            </Text>
+          </>
+        )}
+      />
     );
   } else {
     return (
-      <>
-        <FlatList key={tabLabel} style={styles.textWhite} />
-      </>
+      <FlatList keyExtractor={tabLabel + 'flatlist'} style={styles.textWhite} />
     );
   }
 }

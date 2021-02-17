@@ -8,6 +8,7 @@ function NumberInput({id, action}) {
       <TextInput
         type="search"
         key={id}
+        id={id}
         onChangeText={action}
         maxLength={10}
         placeholder="Enter 10 Digits"
