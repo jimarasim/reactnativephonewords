@@ -11,29 +11,23 @@ function WordAndDefinitionList({words, tabLabel, phone, setValueTapped}) {
     Keyboard.dismiss();
     return (
       <FlatList
-        keyExtractor={() => {
-          return tabLabel + 'flatlist';
-        }}
-        id={() => {
-          return tabLabel + 'flatlist';
-        }}
+        keyExtractor={(tabLabel) => tabLabel + 'flatlist'}
+        id={(tabLabel) => tabLabel + 'flatlist'}
         style={styles.textWhite}
         data={words}
         renderItem={({item, index}) => (
           <>
             <TouchableOpacity onPress={() => setValueTapped(item[0])}>
               <Text
-                keyExtractor={() => {
-                  return tabLabel + 'word' + index;
-                }}
+                keyExtractor={(tabLabel, index) => tabLabel + 'word' + index}
                 style={styles.textBlue}>
-                {() => item[0]}:
+                {item[0]}:
               </Text>
             </TouchableOpacity>
             <Text
-              keyExtractor={() => {
-                return tabLabel + 'definition' + index;
-              }}
+              keyExtractor={(tabLabel, index) =>
+                tabLabel + 'definition' + index
+              }
               style={styles.textWhite}>
               {item[1]}
             </Text>
@@ -43,7 +37,10 @@ function WordAndDefinitionList({words, tabLabel, phone, setValueTapped}) {
     );
   } else {
     return (
-      <FlatList keyExtractor={tabLabel + 'flatlist'} style={styles.textWhite} />
+      <FlatList
+        keyExtractor={(tabLabel) => tabLabel + 'flatlist'}
+        style={styles.textWhite}
+      />
     );
   }
 }

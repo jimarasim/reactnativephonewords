@@ -7,7 +7,7 @@ function NumberInput({id, action}) {
     <>
       <TextInput
         type="search"
-        key={id}
+        keyExtractor={id}
         id={id}
         onChangeText={action}
         maxLength={10}

@@ -40,7 +40,7 @@ const App: () => React$Node = () => {
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
       setSuffixWords(newSuffixWords);
-      newAreaCodeWords.map((word, index) => {
+      areaCodeWords.map((word, index) => {
         fetchDefinitionFromMerriam(
           word[0],
           index,
@@ -48,18 +48,14 @@ const App: () => React$Node = () => {
           setAreaCodeWords,
         );
       });
-      newPrefixWords.map((word, index) => {
+      prefixWords.map((word, index) => {
         fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
       });
-      newSuffixWords.map((word, index) => {
+      suffixWords.map((word, index) => {
         fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
       });
-      Keyboard.dismiss();
     }
   }, [phoneNumber]);
-  useEffect(() => {}, [areaCodeWords]);
-  useEffect(() => {}, [prefixWords]);
-  useEffect(() => {}, [suffixWords]);
   return (
     <>
       <StatusBar key="statusbar" id="statusbar" barStyle="dark-content" />
