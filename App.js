@@ -179,7 +179,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
           newCodedPhoneNumberArray[0][i] +
             newCodedPhoneNumberArray[1][j] +
             newCodedPhoneNumberArray[2][k],
-          '',
+          'PENDING',
         ]);
       }
     }
@@ -191,7 +191,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
           newCodedPhoneNumberArray[3][i] +
             newCodedPhoneNumberArray[4][j] +
             newCodedPhoneNumberArray[5][k],
-          '',
+          'PENDING',
         ]);
       }
     }
@@ -205,7 +205,7 @@ function getWordCombinations(newCodedPhoneNumberArray) {
               newCodedPhoneNumberArray[7][j] +
               newCodedPhoneNumberArray[8][k] +
               newCodedPhoneNumberArray[9][l],
-            '',
+            'PENDING',
           ]);
         }
       }
@@ -252,7 +252,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
           );
         }
         let newWords = words;
-        newWords[(index, 1)] = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
+        newWords[index][1] = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
         setWords(newWords);
       })
       .catch((error) => {
@@ -303,14 +303,14 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
           ? res.list[bestIndex].definition
           : 'NO DEFINITION FOR BEST FOUND';
         let newWords = words;
-        newWords[(index, 1)] = bestDefinition + ' (URBAN)';
+        newWords[index][1] = bestDefinition + ' (URBAN)';
         setWords(newWords);
       })
       .catch((error) => {
         console.log(error);
         let newWords = [];
         newWords = words;
-        newWords[(index, 1)] = 'No definition found.';
+        newWords[index][1] = 'NOT FOUND';
         setWords(newWords);
       });
   }
