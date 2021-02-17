@@ -151,6 +151,8 @@ function handleNumberInputChange(
       }
     }
     setPhoneNumberArray(newCodedPhoneNumberArray);
+  } else {
+    setPhoneNumberArray(Array(10).fill(''));
   }
 }
 
