@@ -37,26 +37,25 @@ const App: () => React$Node = () => {
       [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
         phoneNumberArray,
       );
-      setAreaCodeWords(newAreaCodeWords);
-      setPrefixWords(newPrefixWords);
-      setSuffixWords(newSuffixWords);
       // areaCodeWords.map((word, index) => {
       const index = 0;
       fetchDefinitionFromMerriam(newAreaCodeWords[index][0])
         .then((definition) => {
-          let newWords = newAreaCodeWords;
-          newWords[index][1] = definition;
-          setAreaCodeWords(newWords);
+          newAreaCodeWords[index][1] = definition;
+          console.log("NEW WORDS MERRIAM: " + newAreaCodeWords)
+          setAreaCodeWords(newAreaCodeWords);
         })
         .catch((error) => {
           console.log(error);
           fetchDefinitionFromUrban(newAreaCodeWords[index][0])
             .then((definition) => {
-              let newWords = newAreaCodeWords;
-              newWords[index][1] = definition;
-              setAreaCodeWords(newWords);
+              newAreaCodeWords[index][1] = definition;
+              console.log("NEW WORDS URBAN: " + newAreaCodeWords)
+              setAreaCodeWords(newAreaCodeWords);
             })
             .catch((error) => {
+              newAreaCodeWords[index][1] = "NOT FOUND";
+              setAreaCodeWords(newAreaCodeWords);
               console.log(error);
             });
         });
@@ -76,6 +75,9 @@ const App: () => React$Node = () => {
       setSuffixValueTapped('');
     }
   }, [phoneNumberArray]);
+  useEffect(() => {
+    console.log("AREACODEWORDS EFFECT: " + areaCodeWords)
+  }, [areaCodeWords]);
   return (
     <>
       <StatusBar key="statusbar" id="statusbar" barStyle="dark-content" />
@@ -209,7 +211,6 @@ function getWordCombinations(newCodedPhoneNumberArray) {
 }
 
 function fetchDefinitionFromMerriam(word) {
-  console.log('MERRIAM WORD' + word);
   if (word) {
     word = word.replace('1', 'i').replace('0', 'o');
     //MERRIAM WEBSTER
@@ -251,7 +252,6 @@ function fetchDefinitionFromMerriam(word) {
 }
 
 function fetchDefinitionFromUrban(word) {
-  console.log('URBAN WORD' + word);
   word = word.replace('1', 'i').replace('0', 'o');
   if (word) {
     //URBAN DICTIONARY
