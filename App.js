@@ -37,35 +37,10 @@ const App: () => React$Node = () => {
       [newAreaCodeWords, newPrefixWords, newSuffixWords] = getWordCombinations(
         phoneNumberArray,
       );
-      // areaCodeWords.map((word, index) => {
-      const index = 0;
-      fetchDefinitionFromMerriam(newAreaCodeWords[index][0])
-        .then((definition) => {
-          newAreaCodeWords[index][1] = definition;
-          console.log("NEW WORDS MERRIAM: " + newAreaCodeWords)
-          setAreaCodeWords(newAreaCodeWords);
-        })
-        .catch((error) => {
-          console.log(error);
-          fetchDefinitionFromUrban(newAreaCodeWords[index][0])
-            .then((definition) => {
-              newAreaCodeWords[index][1] = definition;
-              console.log("NEW WORDS URBAN: " + newAreaCodeWords)
-              setAreaCodeWords(newAreaCodeWords);
-            })
-            .catch((error) => {
-              newAreaCodeWords[index][1] = "NOT FOUND";
-              setAreaCodeWords(newAreaCodeWords);
-              console.log(error);
-            });
-        });
-      // });
-      // prefixWords.map((word, index) => {
-      //   fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
-      // });
-      // suffixWords.map((word, index) => {
-      //   fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
-      // });
+      getDefinitions(newAreaCodeWords, setAreaCodeWords);
+      getDefinitions(newPrefixWords, setPrefixWords);
+      getDefinitions(newSuffixWords, setSuffixWords);
+
     } else {
       setAreaCodeWords([]);
       setPrefixWords([]);
@@ -75,9 +50,6 @@ const App: () => React$Node = () => {
       setSuffixValueTapped('');
     }
   }, [phoneNumberArray]);
-  useEffect(() => {
-    console.log("AREACODEWORDS EFFECT: " + areaCodeWords)
-  }, [areaCodeWords]);
   return (
     <>
       <StatusBar key="statusbar" id="statusbar" barStyle="dark-content" />
@@ -210,6 +182,29 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
 
+function getDefinitions(newWords, setWords){
+  for(let index=0; index<newWords.length; index++) {
+    fetchDefinitionFromMerriam(newWords[index][0])
+      .then((definition) => {
+        newWords[index][1] = definition;
+        setWords(newWords);
+      })
+      .catch((error) => {
+        console.log(error);
+        fetchDefinitionFromUrban(newWords[index][0])
+          .then((definition) => {
+            newWords[index][1] = definition;
+            setWords(newWords);
+          })
+          .catch((error) => {
+            newWords[index][1] = "NOT FOUND";
+            setWords(newWords);
+            console.log(error);
+          });
+      });
+  }
+}
+
 function fetchDefinitionFromMerriam(word) {
   if (word) {
     word = word.replace('1', 'i').replace('0', 'o');
@@ -229,7 +224,7 @@ function fetchDefinitionFromMerriam(word) {
           if (!res[i].hasOwnProperty('shortdef')) {
             throw new Error(
               'MERRIAM DEFINITION NOT FOUND. MISSING SHORTDEF ARRAY: ' +
-                JSON.stringify(res),
+                word,
             );
           }
           if (res[i].shortdef[0]) {
@@ -240,10 +235,10 @@ function fetchDefinitionFromMerriam(word) {
         if (!found) {
           throw new Error(
             'MERRIAM DEFINITION NOT FOUND. SHORTDEF ARRAY MISSING VALUE: ' +
-              JSON.stringify(res),
+              word,
           );
         }
-        return res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
+        return (res[i].shortdef[0] + ' (MERRIAMWEBSTER)');
       })
       .catch((error) => {
         throw Error(error);
@@ -284,20 +279,20 @@ function fetchDefinitionFromUrban(word) {
         if (res.list[bestIndex] === undefined) {
           throw new Error(
             'URBAN DEFINITION NOT FOUND. NO BEST INDEX FOUND: ' +
-              JSON.stringify(res),
+              word,
           );
         }
         if (res.list[bestIndex].definition === undefined) {
           throw new Error(
             'URBAN DEFINITION NOT FOUND. BEST INDEX HAD NO DEFINITION: ' +
-              JSON.stringify(res),
+              word,
           );
         }
         bestDefinition = res.list[bestIndex].definition;
-        return bestDefinition + ' (URBAN)';
+        return (bestDefinition + ' (URBAN)');
       })
       .catch((error) => {
-        throw Error('FETCH URBAN FAILED' + error);
+        throw new Error(error);
       });
   }
 }
