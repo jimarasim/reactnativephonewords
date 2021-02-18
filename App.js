@@ -40,20 +40,33 @@ const App: () => React$Node = () => {
       setAreaCodeWords(newAreaCodeWords);
       setPrefixWords(newPrefixWords);
       setSuffixWords(newSuffixWords);
-      areaCodeWords.map((word, index) => {
-        fetchDefinitionFromMerriam(
-          word[0],
-          index,
-          areaCodeWords,
-          setAreaCodeWords,
-        );
-      });
-      prefixWords.map((word, index) => {
-        fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
-      });
-      suffixWords.map((word, index) => {
-        fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
-      });
+      // areaCodeWords.map((word, index) => {
+      const index = 0;
+      fetchDefinitionFromMerriam(newAreaCodeWords[index][0])
+        .then((definition) => {
+          let newWords = newAreaCodeWords;
+          newWords[index][1] = definition;
+          setAreaCodeWords(newWords);
+        })
+        .catch((error) => {
+          console.log(error);
+          fetchDefinitionFromUrban(newAreaCodeWords[index][0])
+            .then((definition) => {
+              let newWords = newAreaCodeWords;
+              newWords[index][1] = definition;
+              setAreaCodeWords(newWords);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      // });
+      // prefixWords.map((word, index) => {
+      //   fetchDefinitionFromMerriam(word[0], index, prefixWords, setPrefixWords);
+      // });
+      // suffixWords.map((word, index) => {
+      //   fetchDefinitionFromMerriam(word[0], index, suffixWords, setSuffixWords);
+      // });
     } else {
       setAreaCodeWords([]);
       setPrefixWords([]);
@@ -73,12 +86,7 @@ const App: () => React$Node = () => {
         <NumberInput
           key="phonenumber"
           id="phonenumber"
-          action={(text) =>
-            handleNumberInputChange(
-              text,
-              setPhoneNumberArray,
-            )
-          }
+          action={(text) => handleNumberInputChange(text, setPhoneNumberArray)}
         />
       </SafeAreaView>
       <ScrollableTabView key="wordlistView" id="wordlistView">
@@ -125,10 +133,7 @@ const App: () => React$Node = () => {
   );
 };
 
-function handleNumberInputChange(
-  text,
-  setPhoneNumberArray,
-  ) {
+function handleNumberInputChange(text, setPhoneNumberArray) {
   if (text.length === 10) {
     const keyLetters = [
       '0',
@@ -203,11 +208,12 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
 
-function fetchDefinitionFromMerriam(word, index, words, setWords) {
+function fetchDefinitionFromMerriam(word) {
+  console.log('MERRIAM WORD' + word);
   if (word) {
     word = word.replace('1', 'i').replace('0', 'o');
     //MERRIAM WEBSTER
-    fetch(
+    return fetch(
       'https://www.dictionaryapi.com/api/v3/references/collegiate/json/' +
         word +
         '?key=84b88140-44b3-4a35-bfbb-203d307ad99e',
@@ -221,9 +227,7 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         for (i = 0; i < numDefs; i++) {
           if (!res[i].hasOwnProperty('shortdef')) {
             throw new Error(
-              'NO MERRIAM WEBSTER DEFINITION FOR ' +
-                word +
-                ' ' +
+              'MERRIAM DEFINITION NOT FOUND. MISSING SHORTDEF ARRAY: ' +
                 JSON.stringify(res),
             );
           }
@@ -234,28 +238,24 @@ function fetchDefinitionFromMerriam(word, index, words, setWords) {
         }
         if (!found) {
           throw new Error(
-            'NO MERRIAM WEBSTER DEFINITION FOR ' +
-              word +
-              ' ' +
+            'MERRIAM DEFINITION NOT FOUND. SHORTDEF ARRAY MISSING VALUE: ' +
               JSON.stringify(res),
           );
         }
-        let newWords = words;
-        newWords[index][1] = res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
-        setWords(newWords);
+        return res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
       })
       .catch((error) => {
-        console.log(error);
-        fetchDefinitionFromUrban(word, index, words, setWords);
+        throw Error(error);
       });
   }
 }
 
-function fetchDefinitionFromUrban(word, index, words, setWords) {
+function fetchDefinitionFromUrban(word) {
+  console.log('URBAN WORD' + word);
   word = word.replace('1', 'i').replace('0', 'o');
   if (word) {
     //URBAN DICTIONARY
-    fetch(
+    return fetch(
       'https://mashape-community-urban-dictionary.p.rapidapi.com/define?term=' +
         word,
       {
@@ -280,27 +280,24 @@ function fetchDefinitionFromUrban(word, index, words, setWords) {
             bestIndex = i;
           }
         }
+        let bestDefinition = '';
         if (res.list[bestIndex] === undefined) {
           throw new Error(
-            'NO URBAN DICTIONARY DEFINITION FOR ' +
-              word +
-              ' ' +
+            'URBAN DEFINITION NOT FOUND. NO BEST INDEX FOUND: ' +
               JSON.stringify(res),
           );
         }
-        const bestDefinition = res.list[bestIndex].definition
-          ? res.list[bestIndex].definition
-          : 'NO DEFINITION FOR BEST FOUND';
-        let newWords = words;
-        newWords[index][1] = bestDefinition + ' (URBAN)';
-        setWords(newWords);
+        if (res.list[bestIndex].definition === undefined) {
+          throw new Error(
+            'URBAN DEFINITION NOT FOUND. BEST INDEX HAD NO DEFINITION: ' +
+              JSON.stringify(res),
+          );
+        }
+        bestDefinition = res.list[bestIndex].definition;
+        return bestDefinition + ' (URBAN)';
       })
       .catch((error) => {
-        console.log(error);
-        let newWords = [];
-        newWords = words;
-        newWords[index][1] = 'NOT FOUND';
-        setWords(newWords);
+        throw Error('FETCH URBAN FAILED' + error);
       });
   }
 }
@@ -335,4 +332,3 @@ const styles = StyleSheet.create({
 });
 
 export default App;
-
