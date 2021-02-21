@@ -20,6 +20,7 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import NumberInput from './NumberInput';
 import WordAndDefinitionList from './WordAndDefinitionList';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const App: () => React$Node = () => {
   const [phoneNumberArray, setPhoneNumberArray] = useState(Array(10).fill(''));
@@ -40,7 +41,6 @@ const App: () => React$Node = () => {
       getDefinitions(newAreaCodeWords, setAreaCodeWords);
       getDefinitions(newPrefixWords, setPrefixWords);
       getDefinitions(newSuffixWords, setSuffixWords);
-
     } else {
       setAreaCodeWords([]);
       setPrefixWords([]);
@@ -101,6 +101,11 @@ const App: () => React$Node = () => {
           id="copyButton"
           style={styles.copyButton}
           title="Copy"
+          onPress={() =>
+            Clipboard.setString(
+              areaValueTapped + prefixValueTapped + suffixValueTapped,
+            )
+          }
         />
       </SafeAreaView>
     </>
@@ -182,8 +187,8 @@ function getWordCombinations(newCodedPhoneNumberArray) {
   return [newAreaCodeWords, newPrefixWords, newSuffixWords];
 }
 
-function getDefinitions(newWords, setWords){
-  for(let index=0; index<newWords.length; index++) {
+function getDefinitions(newWords, setWords) {
+  for (let index = 0; index < newWords.length; index++) {
     fetchDefinitionFromMerriam(newWords[index][0])
       .then((definition) => {
         newWords[index][1] = definition;
@@ -197,7 +202,7 @@ function getDefinitions(newWords, setWords){
             setWords(newWords);
           })
           .catch((error) => {
-            newWords[index][1] = "NOT FOUND";
+            newWords[index][1] = 'NOT FOUND';
             setWords(newWords);
             console.log(error);
           });
@@ -223,8 +228,7 @@ function fetchDefinitionFromMerriam(word) {
         for (i = 0; i < numDefs; i++) {
           if (!res[i].hasOwnProperty('shortdef')) {
             throw new Error(
-              'MERRIAM DEFINITION NOT FOUND. MISSING SHORTDEF ARRAY: ' +
-                word,
+              'MERRIAM DEFINITION NOT FOUND. MISSING SHORTDEF ARRAY: ' + word,
             );
           }
           if (res[i].shortdef[0]) {
@@ -238,7 +242,7 @@ function fetchDefinitionFromMerriam(word) {
               word,
           );
         }
-        return (res[i].shortdef[0] + ' (MERRIAMWEBSTER)');
+        return res[i].shortdef[0] + ' (MERRIAMWEBSTER)';
       })
       .catch((error) => {
         throw Error(error);
@@ -278,18 +282,16 @@ function fetchDefinitionFromUrban(word) {
         let bestDefinition = '';
         if (res.list[bestIndex] === undefined) {
           throw new Error(
-            'URBAN DEFINITION NOT FOUND. NO BEST INDEX FOUND: ' +
-              word,
+            'URBAN DEFINITION NOT FOUND. NO BEST INDEX FOUND: ' + word,
           );
         }
         if (res.list[bestIndex].definition === undefined) {
           throw new Error(
-            'URBAN DEFINITION NOT FOUND. BEST INDEX HAD NO DEFINITION: ' +
-              word,
+            'URBAN DEFINITION NOT FOUND. BEST INDEX HAD NO DEFINITION: ' + word,
           );
         }
         bestDefinition = res.list[bestIndex].definition;
-        return (bestDefinition + ' (URBAN)');
+        return bestDefinition + ' (URBAN)';
       })
       .catch((error) => {
         throw new Error(error);
